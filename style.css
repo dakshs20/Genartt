@@ -1,0 +1,429 @@
+/* Custom CSS for GenArt Application */
+
+/* Ensure html and body take full height for consistent layout */
+html, body {
+    height: 100%;
+    /* Apply Mersad to all elements by default */
+    font-family: 'Mersad', cursive; /* Fallback to cursive */
+}
+
+/* Font Definitions */
+/* Removed specific font-helvetica class as Mersad is now global */
+/* .font-mersad is now the default, so this class is less critical but kept for explicit use if needed */
+.font-mersad {
+    font-family: 'Mersad', cursive; /* Explicitly apply to headings */
+    font-display: swap; /* Ensure font is swapped in once loaded, showing fallback first */
+}
+
+
+/* Ethereal Background Animations (from your provided file) */
+.ethereal-gradient-1, .ethereal-gradient-2, .ethereal-gradient-3 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+    will-change: transform, opacity, filter; /* Hint browser for animation optimization */
+}
+
+.ethereal-gradient-1 {
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, #60a5fa, transparent 70%); /* Blue */
+    top: -20%;
+    left: -20%;
+    animation: move-gradient-1 40s infinite alternate;
+}
+
+.ethereal-gradient-2 {
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, #a78bfa, transparent 70%); /* Purple */
+    bottom: -20%;
+    right: -20%;
+    animation: move-gradient-2 50s infinite alternate;
+}
+
+.ethereal-gradient-3 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #2dd4bf, transparent 70%); /* Teal */
+    top: 30%;
+    left: 40%;
+    animation: move-gradient-3 45s infinite alternate;
+}
+
+@keyframes move-gradient-1 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, 80px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes move-gradient-2 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-70px, -60px) scale(1.03); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes move-gradient-3 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(40px, -90px) scale(0.98); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+.ethereal-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml,%3Csvg width="6" height="6" viewBox="0 0 6 6" xmlns="http://www.w3.org/2000%2Fsvg%3E%3Cg fill="%239C92AC" fill-opacity="0.1" fill-rule="evenodd"%3E%3Cpath d="M5 0h1L0 6V5zM6 5v1H5z"/%3E%3C/g%3E%3C/svg%3E'); /* Subtle geometric pattern */
+    opacity: 0.05;
+    animation: pattern-pan 120s linear infinite;
+    z-index: -0.5;
+    will-change: background-position; /* Hint browser for animation optimization */
+}
+
+@keyframes pattern-pan {
+    from { background-position: 0 0; }
+    to { background-position: 600px 600px; }
+}
+
+/* Blob animation (retained, but with lower opacity for subtlety) */
+@keyframes blob {
+    0%, 100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+        border-radius: 70% 30% 50% 50% / 30% 50% 50% 70%;
+        transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+        border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%;
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+}
+.animate-blob {
+    animation: blob 7s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    animation-fill-mode: forwards; /* Ensure it stays at the end state */
+}
+.animation-delay-0 { animation-delay: 0s; }
+.animation-delay-1000 { animation-delay: 1s; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-3000 { animation-delay: 3s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+/* Fade In Up */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    will-change: transform, opacity; /* Hint browser for animation optimization */
+}
+
+/* Fade In */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+    will-change: opacity; /* Hint browser for animation optimization */
+}
+.animation-delay-200 { animation-delay: 0.2s; }
+
+/* Slide In Up (for image cards - though not used on home page now) */
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-in-up {
+    animation: slideInUp 0.7s ease-out forwards;
+    will-change: transform, opacity; /* Hint browser for animation optimization */
+}
+
+
+/* Text Gradient for Title (Professional Blue/Teal) */
+@keyframes text-gradient-professional {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+.animate-text-gradient-professional {
+    background: linear-gradient(90deg, #60a5fa, #93c5fd, #3b82f6, #60a5fa);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-gradient-professional 4s ease infinite;
+}
+.animate-text-gradient-professional-alt {
+    background: linear-gradient(90deg, #818cf8, #c7d2fe, #6366f1, #818cf8);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-gradient-professional 4s ease infinite;
+}
+
+/* Image Pop In with subtle zoom */
+@keyframes image-pop-in {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.animate-image-pop-in {
+    animation: image-pop-in 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    will-change: transform, opacity; /* Hint browser for animation optimization */
+}
+
+/* Button Pop In */
+@keyframes pop-in {
+    0% { transform: scale(0.5); opacity: 0; }
+    80% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+.animate-pop-in {
+    animation: pop-in 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    animation-fill-mode: forwards; /* Ensure it stays at the end state */
+    will-change: transform, opacity; /* Hint browser for animation optimization */
+}
+
+/* Custom shadow for professionalism */
+.shadow-3xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+/* Fade in from top for header */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-down {
+    animation: fadeInDown 0.5s ease-out forwards;
+    will-change: transform, opacity; /* Hint browser for animation optimization */
+}
+
+/* --- Mobile Optimization: Disable heavy animations on smaller screens --- */
+@media (max-width: 768px) { /* Adjust breakpoint as needed, e.g., Tailwind's md breakpoint */
+    .ethereal-gradient-1,
+    .ethereal-gradient-2,
+    .ethereal-gradient-3,
+    .animate-blob {
+        animation: none !important; /* Disable all these animations */
+        transform: none !important; /* Reset any transforms */
+        filter: none !important; /* Remove blur to reduce GPU load */
+        opacity: 0 !important; /* Make them invisible */
+        display: none !important; /* Completely remove from layout */
+    }
+
+    /* Ensure no lingering background issues if gradients are removed */
+    body {
+        overflow-x: hidden; /* Crucial for preventing horizontal scroll on mobile */
+    }
+}
+
+/* Custom Scrollbar (no longer needed for chat, but keeping general style) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #374151; /* Tailwind gray-700 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #60a5fa; /* Tailwind blue-400 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6; /* Tailwind blue-500 */
+}
+
+/* Custom radio button styles */
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #6b7280;
+    background-color: #4b5563;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+input[type="radio"]:checked {
+    border-color: #3b82f6;
+    background-color: #3b82f6;
+}
+
+input[type="radio"]:checked::before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.2s ease-in-out;
+}
+
+input[type="radio"]:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5);
+}
+
+/* Custom select dropdown styles */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%239CA3AF" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    border-color: #3b82f6;
+}
+
+/* Input/Textarea focus glow (for Generator page) */
+input[type="text"]:focus,
+textarea:focus {
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.5), 0 0 15px rgba(96, 165, 250, 0.3); /* Blue glow */
+    border-color: #60a5fa;
+}
+
+/* Image reveal animation */
+@keyframes imageReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+        filter: blur(20px);
+    }
+    50% {
+        opacity: 0.5;
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+.animate-image-reveal {
+    animation: imageReveal 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    will-change: transform, opacity, filter; /* Hint browser for animation optimization */
+}
+
+/* Button hover glow/ripple (for Generator page buttons) */
+.group button {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    will-change: transform, box-shadow; /* Hint browser for animation optimization */
+}
+
+.group button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
+    z-index: -1;
+    will-change: width, height, opacity; /* Hint browser for animation optimization */
+}
+
+.group button:hover::before {
+    width: 150%;
+    height: 150%;
+    opacity: 1;
+}
+
+/* Specific button animations (for Home page button) */
+#start-creating-btn {
+    position: relative;
+    overflow: hidden;
+    will-change: transform, box-shadow; /* Hint browser for animation optimization */
+}
+
+#start-creating-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.4s ease-in-out;
+    will-change: left; /* Hint browser for animation optimization */
+}
+
+#start-creating-btn:hover::after {
+    left: 100%;
+}
+
+/* Mobile Menu Overlay */
+#mobile-menu-overlay {
+    transition: opacity 0.3s ease-in-out;
+    will-change: opacity; /* Hint browser for animation optimization */
+}
+
+/* Toast Notifications */
+.toast {
+    background-color: rgba(31, 41, 55, 0.95); /* Tailwind gray-800 with opacity */
+    color: #d1d5db; /* Tailwind gray-300 */
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: toast-in 0.3s ease-out forwards, toast-out 0.3s ease-in 2.7s forwards;
+    will-change: transform, opacity; /* Hint browser for animation optimization */
+}
+
+.toast.success {
+    border-left: 4px solid #34d399; /* Tailwind green-400 */
+}
+
+.toast.error {
+    border-left: 4px solid #ef4444; /* Tailwind red-500 */
+}
+
+.toast.info {
+    border-left: 4px solid #60a5fa; /* Tailwind blue-400 */
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(20px); }
+}
