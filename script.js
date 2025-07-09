@@ -60,7 +60,7 @@ const IMAGEN_GEMINI_API_KEY = "AIzaSyBZxXWl9s2AeSCzMrfoEfnYWpGyfvP7jqs"; // <---
 console.log(Date.now(), "script.js: IMAGEN_GEMINI_API_KEY value set at top level.");
 
 // Razorpay Key ID (REPLACE WITH YOUR ACTUAL RAZORPAY LIVE KEY ID)
-const RAZORPAY_KEY_ID = "rzp_live_Sfj1AqiaMdhJLD"; // <--- THIS IS THE LINE FOR YOUR PUBLIC KEY ID - ENSURE THIS IS YOUR LIVE KEY ID
+const RAZORPAY_KEY_ID = "rzp_live_Sfj1AqiaMdhJLD"; // <--- YOUR ACTUAL LIVE Razorpay Key ID
 console.log(Date.now(), "script.js: RAZORPAY_KEY_ID set at top level.");
 
 
@@ -162,8 +162,37 @@ function initFirebase() {
             if (user) {
                 console.log(Date.now(), "onAuthStateChanged: User logged in. Attempting to fetch user data from Firestore.");
                 try {
-                    await fetchUserData(user.uid);
-                    console.log(Date.now(), "onAuthStateChanged: User data fetch completed successfully.");
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        currentCredits = userData.credits !== undefined ? userData.credits : 0; // Use 'credits' field
+                        console.log(Date.now(), "onAuthStateChanged: Fetched existing user data:", userData);
+
+                        const unauthenticatedCredits = localStorage.getItem('unauthenticatedCredits') ? parseInt(localStorage.getItem('unauthenticatedCredits')) : 0;
+                        if (unauthenticatedCredits > 0) {
+                            // Migrate unauthenticated credits to authenticated account
+                            currentCredits += unauthenticatedCredits;
+                            await updateDoc(userDocRef, { credits: currentCredits });
+                            localStorage.removeItem('unauthenticatedCredits'); // Clear local storage after migration
+                            console.log(Date.now(), `onAuthStateChanged: Migrated ${unauthenticatedCredits} unauthenticated credits. Total credits: ${currentCredits}`);
+                            showToast(`Welcome back, ${currentUser.displayName || currentUser.email}! Your free credits were added to your account.`, "success");
+                        } else {
+                            showToast(`Welcome back, ${currentUser.displayName || currentUser.email}!`, "success");
+                        }
+                    } else {
+                        console.log(Date.now(), "onAuthStateChanged: User document does not exist for UID:", user.uid, ". Initializing new user data in Firestore.");
+                        const initialCreditsForNewUser = localStorage.getItem('unauthenticatedCredits') ? parseInt(localStorage.getItem('unauthenticatedCredits')) : 5; // Use local credits if available, else 5
+                        await setDoc(userDocRef, {
+                            credits: initialCreditsForNewUser, // Use 'credits' field
+                            createdAt: serverTimestamp()
+                        });
+                        currentCredits = initialCreditsForNewUser;
+                        localStorage.removeItem('unauthenticatedCredits'); // Clear local storage after migration
+                        console.log(Date.now(), "onAuthStateChanged: New user data initialized in Firestore for UID:", user.uid);
+                        showToast(`Welcome, ${currentUser.displayName || currentUser.email}! You have ${currentCredits} credits.`, "success");
+                    }
                 } catch (dataFetchError) {
                     console.error(Date.now(), "onAuthStateChanged: Error fetching user data:", dataFetchError);
                     setError(`Failed to load user data: ${dataFetchError.message}. Some features may be limited.`);
@@ -172,14 +201,12 @@ function initFirebase() {
             } else {
                 console.log(Date.now(), "onAuthStateChanged: User logged out or no user detected. Using local storage for credits.");
                 currentUser = null;
-                if (localStorage.getItem('unauthenticatedCredits') === null || isNaN(parseInt(localStorage.getItem('unauthenticatedCredits')))) {
-                    currentCredits = 5; // Default free credits
-                    localStorage.setItem('unauthenticatedCredits', currentCredits);
-                    console.log(Date.now(), "onAuthStateChanged: Reset unauthenticatedCredits to 5 (local storage).");
-                } else {
-                    currentCredits = parseInt(localStorage.getItem('unauthenticatedCredits'));
-                    console.log(Date.now(), "onAuthStateChanged: Loaded unauthenticatedCredits from local storage:", currentCredits);
-                }
+                // When logged out, currentCredits should reflect the unauthenticated pool
+                currentCredits = localStorage.getItem('unauthenticatedCredits') !== null && !isNaN(parseInt(localStorage.getItem('unauthenticatedCredits')))
+                    ? parseInt(localStorage.getItem('unauthenticatedCredits'))
+                    : 5; // Default to 5 if local storage is empty/invalid
+                localStorage.setItem('unauthenticatedCredits', currentCredits); // Ensure local storage is up to date
+                console.log(Date.now(), "onAuthStateChanged: Loaded unauthenticatedCredits from local storage:", currentCredits);
             }
             isAuthReady = true; // Auth state is now fully processed
             console.log(Date.now(), "onAuthStateChanged: isAuthReady confirmed true. Updating UI.");
@@ -358,9 +385,8 @@ async function signOutUser() {
         }
         await signOut(auth);
         console.log(Date.now(), "signOutUser: User signed out successfully.");
-        currentCredits = 5; // Reset local storage credits to 5 upon sign out
-        localStorage.setItem('unauthenticatedCredits', currentCredits);
-        showToast("Signed out successfully! You have 5 new free generations.", "info");
+        // The onAuthStateChanged listener will now handle setting currentCredits to the correct unauthenticated value.
+        showToast("Signed out successfully!", "info");
     } catch (error) {
         console.error(Date.now(), "signOutUser: Error signing out:", error);
         setError(`Failed to sign out: ${error.message}`);
@@ -1603,3 +1629,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(Date.now(), "script.js: DOMContentLoaded event listener triggered.");
     initApp(); // Call the main initialization function
 });
+
